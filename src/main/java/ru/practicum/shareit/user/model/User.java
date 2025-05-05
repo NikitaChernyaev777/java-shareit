@@ -1,22 +1,18 @@
-package ru.practicum.shareit.request;
+package ru.practicum.shareit.user.model;
 
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import ru.practicum.shareit.user.model.User;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @Builder(toBuilder = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class ItemRequest {
+public class User {
 
     @EqualsAndHashCode.Include
     private Long id;
-    private String description;
-    private User requestor;
-    private LocalDateTime created;
+    private String name;
+    private String email;
 }
