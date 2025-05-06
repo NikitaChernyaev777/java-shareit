@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     @Override
     public UserResponseDto create(NewUserRequestDto newUserDto) {
@@ -31,25 +32,25 @@ public class UserServiceImpl implements UserService {
                     newUserDto.getEmail()));
         });
 
-        User user = UserMapper.toNewUser(newUserDto);
+        User user = userMapper.toNewUser(newUserDto);
         User savedUser = userRepository.save(user);
 
         log.info("Пользователь с id={} успешно создан", savedUser.getId());
-        return UserMapper.toUserResponseDto(savedUser);
+        return userMapper.toUserResponseDto(savedUser);
     }
 
     @Override
     public List<UserResponseDto> findAll() {
         log.info("Запрошен список всех пользователей");
         return userRepository.findAll().stream()
-                .map(UserMapper::toUserResponseDto)
+                .map(userMapper::toUserResponseDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public UserResponseDto findById(Long userId) {
         log.info("Запрошен пользователь с id={}", userId);
-        return UserMapper.toUserResponseDto(getExistingUser(userId));
+        return userMapper.toUserResponseDto(getExistingUser(userId));
     }
 
     @Override
@@ -67,11 +68,11 @@ public class UserServiceImpl implements UserService {
             });
         }
 
-        User updatedUser = UserMapper.updateUser(existingUser, updateUserDto);
-        userRepository.update(updatedUser);
+        userMapper.updateUser(updateUserDto, existingUser);
+        userRepository.update(existingUser);
 
-        log.info("Пользователь с id={} успешно обновлен", updatedUser.getId());
-        return UserMapper.toUserResponseDto(updatedUser);
+        log.info("Пользователь с id={} успешно обновлен", existingUser.getId());
+        return userMapper.toUserResponseDto(existingUser);
     }
 
     @Override

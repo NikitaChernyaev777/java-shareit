@@ -1,42 +1,21 @@
 package ru.practicum.shareit.item.mapper;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import org.mapstruct.BeanMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 import ru.practicum.shareit.item.dto.request.NewItemRequestDto;
 import ru.practicum.shareit.item.dto.request.UpdateItemRequestDto;
 import ru.practicum.shareit.item.dto.response.ItemResponseDto;
 import ru.practicum.shareit.item.model.Item;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ItemMapper {
+@Mapper(componentModel = "spring")
+public interface ItemMapper {
 
-    public static Item toNewItem(NewItemRequestDto newItemDto) {
-        return Item.builder()
-                .name(newItemDto.getName())
-                .description(newItemDto.getDescription())
-                .available(newItemDto.getAvailable())
-                .build();
-    }
+    Item toNewItem(NewItemRequestDto newItemDto);
 
-    public static Item updateItem(Item item, UpdateItemRequestDto updateItemDto) {
-        if (updateItemDto.hasName()) {
-            item.setName(updateItemDto.getName());
-        }
-        if (updateItemDto.hasDescription()) {
-            item.setDescription(updateItemDto.getDescription());
-        }
-        if (updateItemDto.hasAvailable()) {
-            item.setAvailable(updateItemDto.getAvailable());
-        }
-        return item;
-    }
+    ItemResponseDto toItemResponseDto(Item item);
 
-    public static ItemResponseDto toItemResponseDto(final Item item) {
-        return ItemResponseDto.builder()
-                .id(item.getId())
-                .name(item.getName())
-                .description(item.getDescription())
-                .available(item.getAvailable())
-                .build();
-    }
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void updateItem(UpdateItemRequestDto updateItemDto, @MappingTarget Item item);
 }

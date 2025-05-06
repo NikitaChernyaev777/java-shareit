@@ -25,18 +25,19 @@ public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
     private final UserService userService;
+    private final ItemMapper itemMapper;
 
     @Override
     public ItemResponseDto create(Long userId, NewItemRequestDto newItemDto) {
         log.info("Создание новой вещи c name={} пользователем с userId={}", newItemDto.getName(), userId);
 
         User owner = userService.getExistingUser(userId);
-        Item item = ItemMapper.toNewItem(newItemDto);
+        Item item = itemMapper.toNewItem(newItemDto);
         item.setOwner(owner);
         Item savedItem = itemRepository.save(item);
 
         log.info("Вещь успешно создана: id={}, name={}, ownerId={}", savedItem.getId(), savedItem.getName(), userId);
-        return ItemMapper.toItemResponseDto(savedItem);
+        return itemMapper.toItemResponseDto(savedItem);
     }
 
     @Override
@@ -44,7 +45,7 @@ public class ItemServiceImpl implements ItemService {
         log.info("Запрошен список всех вещей владельца с ownerId={}", ownerId);
         userService.getExistingUser(ownerId);
         return itemRepository.findAllByOwnerId(ownerId).stream()
-                .map(ItemMapper::toItemResponseDto)
+                .map(itemMapper::toItemResponseDto)
                 .collect(Collectors.toList());
     }
 
@@ -55,14 +56,14 @@ public class ItemServiceImpl implements ItemService {
         }
         log.info("Запрошен список вещей по соответствию тексту: '{}'", text);
         return itemRepository.searchByNameOrDescription(text).stream()
-                .map(ItemMapper::toItemResponseDto)
+                .map(itemMapper::toItemResponseDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public ItemResponseDto findById(Long itemId) {
         log.info("Запрошена вещь с id={}", itemId);
-        return ItemMapper.toItemResponseDto(getExistingItem(itemId));
+        return itemMapper.toItemResponseDto(getExistingItem(itemId));
     }
 
     @Override
@@ -79,11 +80,11 @@ public class ItemServiceImpl implements ItemService {
 
         }
 
-        Item updatedItem = ItemMapper.updateItem(existingItem, updateItemDto);
-        itemRepository.update(updatedItem);
+        itemMapper.updateItem(updateItemDto, existingItem);
+        itemRepository.update(existingItem);
 
-        log.info("Вещь с id={} успешно обновлена", updatedItem.getId());
-        return ItemMapper.toItemResponseDto(updatedItem);
+        log.info("Вещь с id={} успешно обновлена", existingItem.getId());
+        return itemMapper.toItemResponseDto(existingItem);
     }
 
     @Override
