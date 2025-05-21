@@ -16,18 +16,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import ru.practicum.shareit.request.ItemRequest;
 import ru.practicum.shareit.user.model.User;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "items")
+@Table(name = "comments")
 @Builder(toBuilder = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Item {
+public class Comment {
 
     @Id
     @EqualsAndHashCode.Include
@@ -36,21 +37,18 @@ public class Item {
     private Long id;
 
     @Column(nullable = false)
-    private String name;
-
-    @Column(nullable = false)
-    private String description;
-
-    @Column(nullable = false)
-    private Boolean available;
+    private String text;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id", nullable = false)
+    @JoinColumn(name = "item_id", nullable = false)
     @ToString.Exclude
-    private User owner;
+    private Item item;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "request_id")
+    @JoinColumn(name = "author_id", nullable = false)
     @ToString.Exclude
-    private ItemRequest request;
+    private User author;
+
+    @Column(nullable = false)
+    private LocalDateTime created;
 }
