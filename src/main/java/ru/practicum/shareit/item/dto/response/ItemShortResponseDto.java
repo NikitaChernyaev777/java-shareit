@@ -1,4 +1,4 @@
-package ru.practicum.shareit.user.dto.response;
+package ru.practicum.shareit.item.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,8 @@ import lombok.ToString;
 @Builder
 @ToString
 @AllArgsConstructor
-public class UserResponseDto {
+public class ItemShortResponseDto {
     private final Long id;
     private final String name;
-    private final String email;
+    private final Boolean available;
 }

@@ -27,30 +27,30 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public List<UserResponseDto> getAll() {
-        return userService.findAll();
+    public List<UserResponseDto> getAllUsers() {
+        return userService.getAllUsers();
     }
 
     @GetMapping("/{userId}")
-    public UserResponseDto getById(@PathVariable("userId") Long userId) {
-        return userService.findById(userId);
+    public UserResponseDto getUserById(@PathVariable("userId") Long userId) {
+        return userService.getUserById(userId);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserResponseDto create(@Valid @RequestBody NewUserRequestDto newUserDto) {
-        return userService.create(newUserDto);
+    public UserResponseDto createUser(@Valid @RequestBody NewUserRequestDto newUserDto) {
+        return userService.createUser(newUserDto);
     }
 
     @PatchMapping("/{userId}")
-    public UserResponseDto update(@PathVariable("userId") Long userId,
-                                  @Valid @RequestBody UpdateUserRequestDto updateUserDto) {
-        return userService.update(userId, updateUserDto);
+    public UserResponseDto updateUser(@PathVariable("userId") Long userId,
+                                      @Valid @RequestBody UpdateUserRequestDto updateUserDto) {
+        return userService.updateUser(userId, updateUserDto);
     }
 
     @DeleteMapping("/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteById(@PathVariable("userId") Long userId) {
-        userService.deleteById(userId);
+    public void deleteUserById(@PathVariable("userId") Long userId) {
+        userService.deleteUserById(userId);
     }
 }

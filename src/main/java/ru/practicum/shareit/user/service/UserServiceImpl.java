@@ -3,6 +3,7 @@ package ru.practicum.shareit.user.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.DuplicatedDataException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.dto.request.NewUserRequestDto;
@@ -18,13 +19,15 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
     @Override
-    public UserResponseDto create(NewUserRequestDto newUserDto) {
+    @Transactional
+    public UserResponseDto createUser(NewUserRequestDto newUserDto) {
         log.info("Создание нового пользователя с email={}", newUserDto.getEmail());
 
         userRepository.findByEmail(newUserDto.getEmail()).ifPresent(userWithSameEmail -> {
@@ -34,13 +37,13 @@ public class UserServiceImpl implements UserService {
 
         User user = userMapper.toNewUser(newUserDto);
         User savedUser = userRepository.save(user);
-
         log.info("Пользователь с id={} успешно создан", savedUser.getId());
+
         return userMapper.toUserResponseDto(savedUser);
     }
 
     @Override
-    public List<UserResponseDto> findAll() {
+    public List<UserResponseDto> getAllUsers() {
         log.info("Запрошен список всех пользователей");
         return userRepository.findAll().stream()
                 .map(userMapper::toUserResponseDto)
@@ -48,13 +51,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDto findById(Long userId) {
+    public UserResponseDto getUserById(Long userId) {
         log.info("Запрошен пользователь с id={}", userId);
         return userMapper.toUserResponseDto(getExistingUser(userId));
     }
 
     @Override
-    public UserResponseDto update(Long userId, UpdateUserRequestDto updateUserDto) {
+    @Transactional
+    public UserResponseDto updateUser(Long userId, UpdateUserRequestDto updateUserDto) {
         log.info("Обновление пользователя с id={}", userId);
 
         User existingUser = getExistingUser(userId);
@@ -69,14 +73,15 @@ public class UserServiceImpl implements UserService {
         }
 
         userMapper.updateUser(updateUserDto, existingUser);
-        userRepository.update(existingUser);
-
+        userRepository.save(existingUser);
         log.info("Пользователь с id={} успешно обновлен", existingUser.getId());
+
         return userMapper.toUserResponseDto(existingUser);
     }
 
     @Override
-    public void deleteById(Long userId) {
+    @Transactional
+    public void deleteUserById(Long userId) {
         log.info("Удаление пользователя c id={}", userId);
         getExistingUser(userId);
         userRepository.deleteById(userId);

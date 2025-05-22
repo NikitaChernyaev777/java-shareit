@@ -1,7 +1,9 @@
 package ru.practicum.shareit.item.dto.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -9,6 +11,8 @@ import lombok.ToString;
 @Setter
 @Builder
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class UpdateItemRequestDto {
     private Long id;
     private String name;
@@ -28,6 +32,6 @@ public class UpdateItemRequestDto {
     }
 
     private boolean isNotBlank(String value) {
-        return value != null && !value.isEmpty();
+        return value != null && !value.trim().isEmpty();
     }
 }
