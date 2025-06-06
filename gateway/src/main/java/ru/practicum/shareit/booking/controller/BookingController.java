@@ -33,8 +33,8 @@ public class BookingController {
     public ResponseEntity<Object> getBookingsByBookerId(
             @RequestHeader(USER_ID_HEADER_NAME) Long userId,
             @RequestParam(name = "state", defaultValue = "all") String stateParam,
-            @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
-            @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
+            @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
+            @Positive @RequestParam(defaultValue = "10") Integer size) {
         BookingState state = BookingState.from(stateParam)
                 .orElseThrow(() -> new IllegalArgumentException("Неверный state: " + stateParam));
         return bookingClient.getBookingsByBookerId(userId, state, from, size);
@@ -48,7 +48,7 @@ public class BookingController {
 
     @GetMapping("/{bookingId}")
     public ResponseEntity<Object> getBookingById(@RequestHeader(USER_ID_HEADER_NAME) Long userId,
-                                                 @PathVariable("bookingId") Long bookingId) {
+                                                 @PathVariable Long bookingId) {
         return bookingClient.getBookingById(userId, bookingId);
     }
 
@@ -61,8 +61,8 @@ public class BookingController {
 
     @PatchMapping("/{bookingId}")
     public ResponseEntity<Object> updateBookingStatus(@RequestHeader(USER_ID_HEADER_NAME) Long userId,
-                                                      @PathVariable("bookingId") Long bookingId,
-                                                      @RequestParam(name = "approved") Boolean approved) {
+                                                      @PathVariable Long bookingId,
+                                                      @RequestParam Boolean approved) {
         return bookingClient.updateBookingStatus(userId, bookingId, approved);
     }
 }

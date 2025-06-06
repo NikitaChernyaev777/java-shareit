@@ -37,13 +37,13 @@ public class ItemController {
 
     @GetMapping("/search")
     public List<ItemResponseDto> getByNameOrDescription(@RequestHeader(USER_ID_HEADER_NAME) Long userId,
-                                                        @RequestParam(value = "text", required = false) String text) {
+                                                        @RequestParam(required = false) String text) {
         return itemService.search(userId, text);
     }
 
     @GetMapping("/{itemId}")
     public ItemResponseDto getItemById(@RequestHeader(USER_ID_HEADER_NAME) Long userId,
-                                       @PathVariable("itemId") Long itemId) {
+                                       @PathVariable Long itemId) {
         return itemService.getItemById(userId, itemId);
     }
 
@@ -57,14 +57,14 @@ public class ItemController {
     @PostMapping("/{itemId}/comment")
     @ResponseStatus(HttpStatus.CREATED)
     public CommentResponseDto createComment(@RequestHeader(USER_ID_HEADER_NAME) Long userId,
-                                            @PathVariable("itemId") Long itemId,
+                                            @PathVariable Long itemId,
                                             @RequestBody NewCommentRequestDto newCommentDto) {
         return itemService.createComment(userId, itemId, newCommentDto);
     }
 
     @PatchMapping("/{itemId}")
     public ItemResponseDto updateItem(@RequestHeader(USER_ID_HEADER_NAME) Long userId,
-                                      @PathVariable("itemId") Long itemId,
+                                      @PathVariable Long itemId,
                                       @RequestBody UpdateItemRequestDto updateItemDto) {
         return itemService.updateItem(userId, itemId, updateItemDto);
     }

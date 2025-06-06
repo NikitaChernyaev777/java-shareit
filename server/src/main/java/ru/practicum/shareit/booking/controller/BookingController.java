@@ -42,7 +42,7 @@ public class BookingController {
 
     @GetMapping("/{bookingId}")
     public BookingResponseDto getBookingById(@RequestHeader(USER_ID_HEADER_NAME) Long userId,
-                                             @PathVariable("bookingId") Long bookingId) {
+                                             @PathVariable Long bookingId) {
         return bookingService.getBookingById(userId, bookingId);
     }
 
@@ -55,8 +55,8 @@ public class BookingController {
 
     @PatchMapping("/{bookingId}")
     public BookingResponseDto updateBookingStatus(@RequestHeader(USER_ID_HEADER_NAME) Long userId,
-                                                  @PathVariable("bookingId") Long bookingId,
-                                                  @RequestParam(name = "approved") Boolean approved) {
+                                                  @PathVariable Long bookingId,
+                                                  @RequestParam Boolean approved) {
         return bookingService.updateBookingStatus(userId, bookingId, approved);
     }
 }

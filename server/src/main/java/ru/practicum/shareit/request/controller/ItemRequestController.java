@@ -34,14 +34,14 @@ public class ItemRequestController {
     @GetMapping("/all")
     public List<ItemRequestResponseDto> getAllOtherUsersItemRequests(
             @RequestHeader(USER_ID_HEADER_NAME) Long userId,
-            @RequestParam(name = "from", defaultValue = "0") Integer from,
-            @RequestParam(name = "size", defaultValue = "10") Integer size) {
+            @RequestParam(defaultValue = "0") Integer from,
+            @RequestParam(defaultValue = "10") Integer size) {
         return itemRequestService.getAllOtherUsersItemRequests(userId, from, size);
     }
 
     @GetMapping("/{requestId}")
     public ItemRequestResponseDto getItemRequestById(@RequestHeader(USER_ID_HEADER_NAME) Long userId,
-                                                     @PathVariable("requestId") Long requestId) {
+                                                     @PathVariable Long requestId) {
         return itemRequestService.getItemRequestById(userId, requestId);
     }
 

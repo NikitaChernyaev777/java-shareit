@@ -37,7 +37,7 @@ public class ItemController {
 
     @GetMapping("/search")
     public ResponseEntity<Object> getByNameOrDescription(@RequestHeader(USER_ID_HEADER_NAME) Long userId,
-                                                         @RequestParam(value = "text", required = false) String text) {
+                                                         @RequestParam(required = false) String text) {
         if (text == null || text.isBlank()) {
             return ResponseEntity.ok(List.of());
         }
@@ -46,7 +46,7 @@ public class ItemController {
 
     @GetMapping("/{itemId}")
     public ResponseEntity<Object> getItemById(@RequestHeader(USER_ID_HEADER_NAME) Long userId,
-                                              @PathVariable("itemId") Long itemId) {
+                                              @PathVariable Long itemId) {
         return itemClient.getItemById(userId, itemId);
     }
 
@@ -60,14 +60,14 @@ public class ItemController {
     @PostMapping("/{itemId}/comment")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Object> createComment(@RequestHeader(USER_ID_HEADER_NAME) Long userId,
-                                                @PathVariable("itemId") Long itemId,
+                                                @PathVariable Long itemId,
                                                 @Valid @RequestBody NewCommentRequestDto newCommentDto) {
         return itemClient.createComment(userId, itemId, newCommentDto);
     }
 
     @PatchMapping("/{itemId}")
     public ResponseEntity<Object> updateItem(@RequestHeader(USER_ID_HEADER_NAME) Long userId,
-                                             @PathVariable("itemId") Long itemId,
+                                             @PathVariable Long itemId,
                                              @Valid @RequestBody UpdateItemRequestDto updateItemDto) {
         return itemClient.updateItem(userId, itemId, updateItemDto);
     }
